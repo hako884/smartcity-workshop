@@ -1,0 +1,31 @@
+#!/bin/bash
+PROFILE=$1
+
+if [ -z "$1" ]
+then
+  echo "./deployer.sh <AWS_PROFILE_NAME>";
+  exit;
+else
+  echo "Executing deployer with profile: ${PROFILE}";
+fi
+
+INSTALL="npm i"
+BOOTSTRAP="npm run cdk bootstrap -- --profile ${PROFILE}"
+PROVISION="npm run cdk deploy -- --profile ${PROFILE} NetworkStack DocumentdbStack AuroraStack --outputs-file ./cdk-outputs.json --require-approval never"
+DOCKER_GENERATOR="node --experimental-json-modules docker/docker-compose-generator.mjs"
+
+$INSTALL
+InstallPackagesStatus=$?
+[ $InstallPackagesStatus -eq 0 ] && echo "Install packages OK" || exit
+
+$BOOTSTRAP
+bootstrap_status=$?
+[ $bootstrap_status -eq 0 ] && echo "Bootstrap OK" || exit
+
+$PROVISION
+provision_status=$?
+[ $provision_status -eq 0 ] && echo "Provisioning AWS OK" || exit
+
+$DOCKER_GENERATOR
+generator_status=$?
+[ $generator_status -eq 0 ] && echo "Generate docker-compose files OK" || exit
