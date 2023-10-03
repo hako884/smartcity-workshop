@@ -35,4 +35,6 @@ new AuroraStack(app, "AuroraStack", {
 
 new IoTStack(app, "IoTStack", {
   env,
+  vpc: nw.vpc,
+  iotLambdaSg: nw.iotLambdaSg
 });

@@ -1,13 +1,15 @@
-import { CfnOutput, SecretValue, Stack, StackProps, aws_iam, aws_iot, Duration, custom_resources } from "aws-cdk-lib";
+import { CfnOutput, Stack, StackProps, aws_iam, aws_iot, Duration, custom_resources, aws_ec2 } from "aws-cdk-lib";
 import * as iot_alpha from "@aws-cdk/aws-iot-alpha";
 import * as iot_actions_alpha from "@aws-cdk/aws-iot-actions-alpha";
 import { PythonFunction } from "@aws-cdk/aws-lambda-python-alpha";
 import { Runtime } from "aws-cdk-lib/aws-lambda";
-import { Secret } from "aws-cdk-lib/aws-secretsmanager";
 import { ThingWithCert } from "cdk-iot-core-certificates";
 import { Construct } from "constructs";
 
-export interface IoTStackProps extends StackProps {}
+export interface IoTStackProps extends StackProps {
+  vpc: aws_ec2.Vpc;
+  iotLambdaSg: aws_ec2.SecurityGroup;
+}
 
 export class IoTStack extends Stack {
   constructor(scope: Construct, id: string, props: IoTStackProps) {
@@ -85,6 +87,8 @@ export class IoTStack extends Stack {
     });
 
     const putDeviceDataFunction = new PythonFunction(this, "PutRecordHandler", {
+      vpc: props.vpc,
+      securityGroups: [props.iotLambdaSg],
       runtime: Runtime.PYTHON_3_10,
       entry: "lambda/put-device-data",
       index: "index.py",
