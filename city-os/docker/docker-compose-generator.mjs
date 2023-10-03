@@ -13,62 +13,6 @@ function outputYml(path, composeObject) {
   console.log("Generated docker-compose file. ".concat(path));
 }
 
-// function parseWaf(path) {
-//   try {
-//     console.log("Using WAF rules from ".concat(path));
-//     return JSON.parse(fs.readFileSync(path, "utf8"));
-//   } catch (e) {
-//     console.log("[WARN] waf.json doesn't exist or is not in json format");
-//   }
-// }
-
-// function hasWafAllowItems(waf) {
-//   if (
-//     waf &&
-//     waf.ipRatebased &&
-//     Array.isArray(waf.ipRatebased.allowList) &&
-//     waf.ipRatebased.allowList.length > 0
-//   ) {
-//     return true;
-//   }
-//   console.warn(
-//     "[WARN] WAF Allow list is empty, this makes the service to be public"
-//   );
-//   return false;
-// }
-
-// function hasWafDenyItems(waf) {
-//   if (
-//     waf &&
-//     waf.ipRestriction &&
-//     Array.isArray(waf.ipRestriction.denyList) &&
-//     waf.ipRestriction.denyList.length > 0
-//   ) {
-//     return true;
-//   }
-//   console.log("[NOTICE] WAF Deny list is empty.");
-//   return false;
-// }
-
-// function configureAllowWaf(map, waf) {
-//   const resources = map["x-aws-cloudformation"].Resources;
-//   if (hasWafAllowItems(waf)) {
-//     resources.IPAllowList.Properties.Addresses = waf.ipRatebased.allowList;
-//   } else {
-//     resources.WebACL.Properties.DefaultAction = { Allow: {} };
-//     resources.IPAllowList.Properties.Addresses = ["0.0.0.0/32"];
-//   }
-// }
-
-// function configureDenyWaf(map, waf) {
-//   const resources = map["x-aws-cloudformation"].Resources;
-//   if (hasWafDenyItems(waf)) {
-//     resources.IPDenyList.Properties.Addresses = waf.ipRestriction.denyList;
-//   } else {
-//     resources.IPDenyList.Properties.Addresses = ["0.0.0.0/32"];
-//   }
-// }
-
 try {
   const cygnusSample = "./docker/cygnus/docker-compose.yml.sample";
   const orionSample = "./docker/orion/docker-compose.yml.sample";
