@@ -6,6 +6,7 @@ import { DocumentdbStack } from "../lib/documentdb-stack";
 import { NetworkStack } from "../lib/network-stack";
 import { AuroraStack } from "../lib/aurora-stack";
 import { IoTStack } from "../lib/iot-stack";
+import { APIGWCognitoStack } from "../lib/apigw-cognito-stack";
 
 const app = new cdk.App();
 
@@ -34,5 +35,9 @@ new AuroraStack(app, "AuroraStack", {
 });
 
 new IoTStack(app, "IoTStack", {
+  env,
+});
+
+new APIGWCognitoStack(app, "APIGWCognitoStack", {
   env,
 });
