@@ -24,6 +24,7 @@
     "@aws-cdk/aws-iot-alpha": "^2.99.1-alpha.0",
     "@aws-cdk/aws-lambda-python-alpha": "^2.99.1-alpha.0",
     "aws-cdk-lib": "2.99.1",
+    "cdk-iot-core-certificates": "^1.0.415",
     "constructs": "^10.0.0",
     "source-map-support": "^0.5.21",
     "yaml": "^2.3.1"
