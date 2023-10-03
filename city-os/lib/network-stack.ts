@@ -1,10 +1,4 @@
-import {
-  CfnOutput,
-  RemovalPolicy,
-  Stack,
-  StackProps,
-  aws_ec2,
-} from "aws-cdk-lib";
+import { CfnOutput, RemovalPolicy, Stack, StackProps, aws_ec2 } from "aws-cdk-lib";
 import { IpAddresses } from "aws-cdk-lib/aws-ec2";
 import { LogGroup } from "aws-cdk-lib/aws-logs";
 import { Construct } from "constructs";
@@ -77,18 +71,14 @@ export class NetworkStack extends Stack {
     // ALB Orion security group
     const albForOrionSG = new aws_ec2.SecurityGroup(this, "SG for Orion-ALB", {
       vpc,
-      description: "Fiware-Orion allow internet access to API",
+      description: "Fiware-Orion internal access to API",
     });
 
     // ALB Cygnus security group
-    const albForCygnusSG = new aws_ec2.SecurityGroup(
-      this,
-      "SG for Cygnus-ALB",
-      {
-        vpc,
-        description: "Fiware-Cygnus allow internet access to managment API",
-      }
-    );
+    const albForCygnusSG = new aws_ec2.SecurityGroup(this, "SG for Cygnus-ALB", {
+      vpc,
+      description: "Fiware-Cygnus allow internet access to managment API",
+    });
 
     const publicSubnetsIds = new Array();
     vpc.publicSubnets.forEach((subnet) => {
@@ -115,10 +105,7 @@ export class NetworkStack extends Stack {
     cygnusSG.addIngressRule(albForCygnusSG, aws_ec2.Port.tcp(5080));
 
     // ALB Orion and Cynus
-    albForOrionSG.addIngressRule(
-      aws_ec2.Peer.anyIpv4(),
-      aws_ec2.Port.tcp(1026)
-    );
+    albForOrionSG.addIngressRule(aws_ec2.Peer.anyIpv4(), aws_ec2.Port.tcp(1026));
     albForCygnusSG.addIngressRule(orionSG, aws_ec2.Port.tcp(5055));
 
     // Expose security groups and vpc
