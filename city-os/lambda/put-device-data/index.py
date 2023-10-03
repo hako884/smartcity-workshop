@@ -1,7 +1,10 @@
 import boto3
+import os
+import requests
 
+NGSI_ENDPOINT = os.environ['NGSI_ENDPOINT']
 
-def hendler(event, context):
+def handler(event, context):
     print(event)
     pass
-    # fiware on awsのAPIを叩く
+    # fiware on awsのAPIを叩くロジックを書く
