@@ -77,6 +77,13 @@ x-aws-cloudformation:
           - TargetGroupArn:
               Ref: OrionTCP1026TargetGroup
             Type: forward
+    Parameter:
+      Type: AWS::SSM::Parameter
+      Properties:
+        Name: "orion-alb-id"
+        Type: "String"
+        Value:
+          Ref: LoadBalancer
 
 networks:
   orion-sg:
