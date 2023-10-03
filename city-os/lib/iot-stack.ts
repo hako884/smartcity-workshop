@@ -1,4 +1,4 @@
-import { CfnOutput, Stack, StackProps, aws_iam, aws_iot, Duration, custom_resources, aws_ec2 } from "aws-cdk-lib";
+import { CfnOutput, Stack, StackProps, aws_iam, aws_iot, Duration, custom_resources, aws_ec2, aws_ssm, aws_elasticloadbalancingv2 as elbv2 } from "aws-cdk-lib";
 import * as iot_alpha from "@aws-cdk/aws-iot-alpha";
 import * as iot_actions_alpha from "@aws-cdk/aws-iot-actions-alpha";
 import { PythonFunction } from "@aws-cdk/aws-lambda-python-alpha";
@@ -86,6 +86,12 @@ export class IoTStack extends Stack {
       sql: iot_alpha.IotSql.fromStringAsVer20160323(`SELECT * FROM 'data/#'`),
     });
 
+    const orionAlbId = aws_ssm.StringParameter.valueFromLookup(this, "orion-alb-id");
+
+    const orionAlb = elbv2.ApplicationLoadBalancer.fromLookup(this, "OrionAlb", {
+      loadBalancerArn: orionAlbId,
+    });
+
     const putDeviceDataFunction = new PythonFunction(this, "PutRecordHandler", {
       vpc: props.vpc,
       securityGroups: [props.iotLambdaSg],
@@ -95,7 +101,7 @@ export class IoTStack extends Stack {
       memorySize: 256,
       timeout: Duration.seconds(3),
       environment: {
-        NGSI_ENDPOINT: "",
+        NGSI_ENDPOINT: orionAlb.loadBalancerDnsName,
       },
     });
 

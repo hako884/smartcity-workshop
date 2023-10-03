@@ -156,22 +156,13 @@ export class NetworkStack extends Stack {
     new CfnOutput(this, "SG-Cynus-ALB", {
       value: `${albForCygnusSG.securityGroupId}`,
     });
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> main
 
     new CfnOutput(this, "SG-VPC-LINK", {
       value: `${vpcLinkSG.securityGroupId}`,
     });
-<<<<<<< HEAD
 
     new CfnOutput(this, "SG-IoT-Lambda", {
       value: `${iotLambdaSG.securityGroupId}`,
     });
->>>>>>> Stashed changes
-=======
->>>>>>> main
   }
 }
