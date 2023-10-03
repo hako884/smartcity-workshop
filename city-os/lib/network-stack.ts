@@ -80,6 +80,12 @@ export class NetworkStack extends Stack {
       description: "Fiware-Cygnus allow internet access to managment API",
     });
 
+    // VPC Link security group
+    const vpcLinkSG = new aws_ec2.SecurityGroup(this, "SG for VPC-LINK", {
+      vpc,
+      description: "access to internal orion",
+    });
+
     const publicSubnetsIds = new Array();
     vpc.publicSubnets.forEach((subnet) => {
       publicSubnetsIds.push(subnet.subnetId);
@@ -105,7 +111,7 @@ export class NetworkStack extends Stack {
     cygnusSG.addIngressRule(albForCygnusSG, aws_ec2.Port.tcp(5080));
 
     // ALB Orion and Cynus
-    albForOrionSG.addIngressRule(aws_ec2.Peer.anyIpv4(), aws_ec2.Port.tcp(1026));
+    albForOrionSG.addIngressRule(vpcLinkSG, aws_ec2.Port.tcp(1026));
     albForCygnusSG.addIngressRule(orionSG, aws_ec2.Port.tcp(5055));
 
     // Expose security groups and vpc
@@ -140,6 +146,10 @@ export class NetworkStack extends Stack {
 
     new CfnOutput(this, "SG-Cynus-ALB", {
       value: `${albForCygnusSG.securityGroupId}`,
+    });
+
+    new CfnOutput(this, "SG-VPC-LINK", {
+      value: `${vpcLinkSG.securityGroupId}`,
     });
   }
 }
