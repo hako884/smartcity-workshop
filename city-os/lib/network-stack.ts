@@ -1,10 +1,4 @@
-import {
-  CfnOutput,
-  RemovalPolicy,
-  Stack,
-  StackProps,
-  aws_ec2,
-} from "aws-cdk-lib";
+import { CfnOutput, RemovalPolicy, Stack, StackProps, aws_ec2 } from "aws-cdk-lib";
 import { IpAddresses } from "aws-cdk-lib/aws-ec2";
 import { LogGroup } from "aws-cdk-lib/aws-logs";
 import { Construct } from "constructs";
@@ -78,18 +72,20 @@ export class NetworkStack extends Stack {
     // ALB Orion security group
     const albForOrionSG = new aws_ec2.SecurityGroup(this, "SG for Orion-ALB", {
       vpc,
-      description: "Fiware-Orion allow internet access to API",
+      description: "Fiware-Orion internal access to API",
     });
 
     // ALB Cygnus security group
-    const albForCygnusSG = new aws_ec2.SecurityGroup(
-      this,
-      "SG for Cygnus-ALB",
-      {
-        vpc,
-        description: "Fiware-Cygnus allow internet access to managment API",
-      }
-    );
+    const albForCygnusSG = new aws_ec2.SecurityGroup(this, "SG for Cygnus-ALB", {
+      vpc,
+      description: "Fiware-Cygnus allow internet access to managment API",
+    });
+
+    // VPC Link security group
+    const vpcLinkSG = new aws_ec2.SecurityGroup(this, "SG for VPC-LINK", {
+      vpc,
+      description: "access to internal orion",
+    });
 
     // VPC Link security group
     const iotLambdaSG = new aws_ec2.SecurityGroup(this, "SG for IoT Lambda", {
@@ -160,16 +156,22 @@ export class NetworkStack extends Stack {
     new CfnOutput(this, "SG-Cynus-ALB", {
       value: `${albForCygnusSG.securityGroupId}`,
     });
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 =======
+=======
+>>>>>>> main
 
     new CfnOutput(this, "SG-VPC-LINK", {
       value: `${vpcLinkSG.securityGroupId}`,
     });
+<<<<<<< HEAD
 
     new CfnOutput(this, "SG-IoT-Lambda", {
       value: `${iotLambdaSG.securityGroupId}`,
     });
 >>>>>>> Stashed changes
+=======
+>>>>>>> main
   }
 }
