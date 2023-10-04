@@ -39,5 +39,7 @@ new IoTStack(app, "IoTStack", {
 });
 
 new APIGWCognitoStack(app, "APIGWCognitoStack", {
-  env,
+  apiGatewayCongitoVpc: nw.vpc,
+  vpcLinkSg: nw.vpcLinkSg,
+  env
 });
