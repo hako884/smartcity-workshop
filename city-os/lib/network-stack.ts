@@ -14,6 +14,7 @@ export class NetworkStack extends Stack {
   public readonly ddbSg: aws_ec2.SecurityGroup;
   public readonly auroraSg: aws_ec2.SecurityGroup;
   public readonly iotLambdaSg: aws_ec2.SecurityGroup;
+  public readonly vpcLinkSg: aws_ec2.SecurityGroup;
 
   constructor(scope: Construct, id: string, props: NetworkProps) {
     super(scope, id, props);
@@ -127,6 +128,7 @@ export class NetworkStack extends Stack {
     this.ddbSg = ddbSG;
     this.auroraSg = auroraSG;
     this.iotLambdaSg = iotLambdaSG;
+    this.vpcLinkSg = vpcLinkSG;
 
     // Outputs
     new CfnOutput(this, "OrionVPCId", {

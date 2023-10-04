@@ -9,15 +9,18 @@ export const awsconfig =
     //   userPoolWebClientId: '72nv86sc1i02ugcvk5l5mp9cgj',
     //   identityPoolId: 'us-east-1:47784262-7edb-45a1-9f96-ce691a1c8c11',
       // Cross Account User Pool
-      userPoolId: 'us-east-1_Gvvd9BxEQ',
-      userPoolWebClientId: '1lra567fi40m6mdng15vterh1r',
+    //   userPoolId: 'us-east-1_Gvvd9BxEQ',
+    //   userPoolWebClientId: '1lra567fi40m6mdng15vterh1r',
+      // Test User Pool
+      userPoolId: 'us-east-1_ZXDejVPli',
+      userPoolWebClientId: '7bu3m97eo66dtph5ntf612fc04',
     },
     API: {
         endpoints: [
             {
                 name: 'orion',
                 // endpoint: 'http://orion-alb-65818145.us-east-1.elb.amazonaws.com:1026',
-                endpoint: 'https://wwub32yo9c.execute-api.us-east-1.amazonaws.com/',
+                endpoint: 'https://dyoj1339k5.execute-api.us-east-1.amazonaws.com/',
                 custom_header: async () => {
                 const currentSession = await Auth.currentSession();
                 return {
