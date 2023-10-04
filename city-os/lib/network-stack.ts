@@ -13,6 +13,7 @@ export class NetworkStack extends Stack {
   public readonly vpc: aws_ec2.Vpc;
   public readonly ddbSg: aws_ec2.SecurityGroup;
   public readonly auroraSg: aws_ec2.SecurityGroup;
+  public readonly iotLambdaSg: aws_ec2.SecurityGroup;
   public readonly vpcLinkSg: aws_ec2.SecurityGroup;
 
   constructor(scope: Construct, id: string, props: NetworkProps) {
@@ -87,6 +88,12 @@ export class NetworkStack extends Stack {
       description: "access to internal orion",
     });
 
+    // VPC Link security group
+    const iotLambdaSG = new aws_ec2.SecurityGroup(this, "SG for IoT Lambda", {
+      vpc,
+      description: "access to internal orion",
+    });
+
     const publicSubnetsIds = new Array();
     vpc.publicSubnets.forEach((subnet) => {
       publicSubnetsIds.push(subnet.subnetId);
@@ -113,12 +120,14 @@ export class NetworkStack extends Stack {
 
     // ALB Orion and Cynus
     albForOrionSG.addIngressRule(vpcLinkSG, aws_ec2.Port.tcp(1026));
+    albForOrionSG.addIngressRule(iotLambdaSG, aws_ec2.Port.tcp(1026));
     albForCygnusSG.addIngressRule(orionSG, aws_ec2.Port.tcp(5055));
 
     // Expose security groups and vpc
     this.vpc = vpc;
     this.ddbSg = ddbSG;
     this.auroraSg = auroraSG;
+    this.iotLambdaSg = iotLambdaSG;
     this.vpcLinkSg = vpcLinkSG;
 
     // Outputs
@@ -152,6 +161,10 @@ export class NetworkStack extends Stack {
 
     new CfnOutput(this, "SG-VPC-LINK", {
       value: `${vpcLinkSG.securityGroupId}`,
+    });
+
+    new CfnOutput(this, "SG-IoT-Lambda", {
+      value: `${iotLambdaSG.securityGroupId}`,
     });
   }
 }
