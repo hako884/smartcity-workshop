@@ -5,6 +5,7 @@ import { aws_lambda_nodejs as lambdaNode } from 'aws-cdk-lib';
 import { aws_iam as iam } from 'aws-cdk-lib';
 import { aws_cloudfront as cloudfront } from 'aws-cdk-lib';
 import { aws_s3 as s3 } from 'aws-cdk-lib';
+import { aws_cognito as cognito } from 'aws-cdk-lib';
 import { aws_s3_deployment as s3Deployment } from 'aws-cdk-lib';
 import { aws_apigateway as apigw } from 'aws-cdk-lib';
 import * as path from "path";
@@ -12,61 +13,6 @@ import * as path from "path";
 export class FrontendStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
-
-    // const apiDefaultHandler = new lambdaNode.NodejsFunction(
-    //   this,
-    //   "apiDefaultHandler",
-    //   {
-    //     runtime: lambda.Runtime.NODEJS_12_X,
-    //     handler: "get",
-    //     entry: path.join(__dirname, "../../api/default/index.ts"),
-    //     memorySize: 1024,
-    //   }
-    // );
-    // const apiHelloGetHandler = new lambdaNode.NodejsFunction(
-    //   this,
-    //   "apiHelloGetHandler",
-    //   {
-    //     runtime: lambda.Runtime.NODEJS_12_X,
-    //     handler: "get",
-    //     entry: path.join(__dirname, "../../api/hello/index.ts"),
-    //     memorySize: 1024,
-    //   }
-    // );
-    // const apiWorldGetHandler = new lambdaNode.NodejsFunction(
-    //   this,
-    //   "apiWorldGetHandler",
-    //   {
-    //     runtime: lambda.Runtime.NODEJS_12_X,
-    //     handler: "get",
-    //     entry: path.join(__dirname, "../../api/world/index.ts"),
-    //     memorySize: 1024,
-    //   }
-    // );
-    // const apiGateway = new apigw.LambdaRestApi(this, "apiGateway", {
-    //   handler: apiDefaultHandler,
-    //   proxy: false,
-    // });
-
-    // // /api
-    // const apiRoute = apiGateway.root.addResource("api")
-
-    // // /api/hello
-    // const apiHelloRoute = apiRoute.addResource("hello");
-    // // GET
-    // apiHelloRoute.addMethod(
-    //   "GET",
-    //   new apigw.LambdaIntegration(apiHelloGetHandler)
-    // );
-
-    // // /api/world
-    // const apiWorldRoute = apiRoute.addResource("world");
-    // // GET
-    // apiWorldRoute.addMethod(
-    //   "GET",
-    //   new apigw.LambdaIntegration(apiWorldGetHandler)
-    // );
-
     // Create a bucket for static content.
     const staticBucket = new s3.Bucket(this, "staticBucket", {
       encryption: s3.BucketEncryption.S3_MANAGED,
@@ -141,12 +87,12 @@ export class FrontendStack extends Stack {
         //   },
         //   behaviors: [
         //     {
-        //       lambdaFunctionAssociations: [
-        //         {
-        //           lambdaFunction: apiCorsLambda,
-        //           eventType: cloudfront.LambdaEdgeEventType.ORIGIN_RESPONSE,
-        //         },
-        //       ],
+        //       // lambdaFunctionAssociations: [
+        //       //   {
+        //       //     lambdaFunction: apiCorsLambda,
+        //       //     eventType: cloudfront.LambdaEdgeEventType.ORIGIN_RESPONSE,
+        //       //   },
+        //       // ],
         //       allowedMethods: cloudfront.CloudFrontAllowedMethods.ALL,
         //       pathPattern: "api/*",
         //       maxTtl: Duration.millis(0),
