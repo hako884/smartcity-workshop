@@ -99,7 +99,7 @@ export class IoTStack extends Stack {
       entry: "lambda/put-device-data",
       index: "index.py",
       memorySize: 256,
-      timeout: Duration.seconds(3),
+      timeout: Duration.seconds(10),
       environment: {
         NGSI_ENDPOINT: orionAlb.loadBalancerDnsName,
       },
