@@ -5,6 +5,11 @@
   text-align: center;
 }
 
+/* 追加 */
+main {
+  min-width: 640px;
+}
+
 .logo {
   height: 6em;
   padding: 1.5em;
