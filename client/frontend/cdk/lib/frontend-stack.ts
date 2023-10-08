@@ -29,15 +29,6 @@ export class FrontendStack extends Stack {
       versioned: true,
     });
 
-    // Deploy the static content.
-    // Depending on your process, you might want to deploy the static content yourself
-    // using an s3 sync command instead.
-    new s3Deployment.BucketDeployment(this, "staticBucketDeployment", {
-      sources: [s3Deployment.Source.asset(path.join(__dirname, "../../app/dist"))],
-      destinationKeyPrefix: "/",
-      destinationBucket: staticBucket,
-    });
-
     // Create a CloudFront distribution connected to the Lambda and the static content.
     const cfOriginAccessIdentity = new cloudfront.OriginAccessIdentity(
       this,
@@ -118,6 +109,18 @@ export class FrontendStack extends Stack {
         },
       ],
     });
+
+    // Deploy the static content.
+    // Depending on your process, you might want to deploy the static content yourself
+    // using an s3 sync command instead.
+    new s3Deployment.BucketDeployment(this, "staticBucketDeployment", {
+      sources: [s3Deployment.Source.asset(path.join(__dirname, "../../app/dist"))],
+      destinationKeyPrefix: "/",
+      destinationBucket: staticBucket,
+      distribution: distribution,
+      distributionPaths: ['/*'],
+    });
+    
     new CfnOutput(this, "distributionDomainName", { value: distribution.distributionDomainName });
   }
 }
