@@ -8,7 +8,7 @@ import '@aws-amplify/ui-react/styles.css';
 import { awsconfig } from './constants/aws-exports';
 Amplify.configure(awsconfig);
 
-import { Box } from "@chakra-ui/react";
+import { Box, Button } from "@chakra-ui/react";
 
 const App = () => (
   <Authenticator>
@@ -20,7 +20,7 @@ const App = () => (
         </Box>
         <Fetch />
         <Box textAlign={'left'} fontSize={20}>
-          <button onClick={signOut}>Sign out</button>
+          <Button backgroundColor={'#047D95'} color={'white'} onClick={signOut}>Sign Out</Button>
         </Box>
       </main>
     )}

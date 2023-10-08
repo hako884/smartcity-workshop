@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Flex, Center, Text, Box, Stack, Image, Spacer } from '@chakra-ui/react'
+import { Flex, Center, Text, Box, Stack, Image, Spacer, Button } from '@chakra-ui/react'
 import { API } from 'aws-amplify';
 
 const Fetch = () => {
@@ -45,6 +45,16 @@ const Fetch = () => {
         .catch(error => alert(error))
     },[])
 
+    const onClick = () => {
+        API.get('orion-app', '/api/hello', {})
+        .then(res => {
+            console.log('refresh')
+            console.log(res)
+            setStoreCond(res.message.conditions)
+        })
+        .catch(error => alert(error))
+    }
+
     return (
         <div>
             <Box mb={2}>
@@ -83,15 +93,16 @@ const Fetch = () => {
                         <Text>
                             Temperature:
                         </Text>
-                        <Text fontWeight={'bold'} mb={4}>
+                        <Text fontWeight={'bold'}>
                             {storeCond.temperature ? storeCond.temperature : ''}℃
                         </Text>
                         <Text>
                             Humidity:
                         </Text>
-                        <Text fontWeight={'bold'} mb={4}>
+                        <Text fontWeight={'bold'}>
                             {storeCond.humidity ? storeCond.humidity : ''}%
                         </Text>
+                        <Button colorScheme='orange' onClick={onClick}>Update Condition</Button>
                     </Stack>
                 </Box>
             </Flex>

@@ -29,7 +29,7 @@ def handler(event, context):
 
     res = r.json()
     access_token = res["access_token"]
-    # print(access_token)
+    print(access_token)
 
     # 入手したアクセストークンを利用してAPIを叩く
     API_ENDPOINT = "https://w63e5x5xlf.execute-api.ap-northeast-1.amazonaws.com"
