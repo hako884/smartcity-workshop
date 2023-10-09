@@ -4,8 +4,8 @@ export const awsconfig =
 {
     Auth: {
       region: 'ap-northeast-1',
-      userPoolId: 'ap-northeast-1_SBAcxePZj',
-      userPoolWebClientId: '7fbf2jr9t93pedejah4o06a12o',
+      userPoolId: 'ap-northeast-1_Jyg3H9bVm',
+      userPoolWebClientId: '59kvg1mv8r76gbs0jf24c6qrmb',
     },
     API: {
         endpoints: [
