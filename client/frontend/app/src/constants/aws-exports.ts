@@ -1,17 +1,18 @@
 import { Auth } from 'aws-amplify';
+import config from './config';
 
 export const awsconfig = 
 {
     Auth: {
-      region: 'ap-northeast-1',
-      userPoolId: 'ap-northeast-1_Jyg3H9bVm',
-      userPoolWebClientId: '59kvg1mv8r76gbs0jf24c6qrmb',
+        region: config.awsRegion,
+        userPoolId: config.userPoolId,
+        userPoolWebClientId: config.userPoolClientId,
     },
     API: {
         endpoints: [
             {
                 name: 'orion-app',
-                endpoint: 'https://ll91xixjpj.execute-api.ap-northeast-1.amazonaws.com/prod',
+                endpoint: config.apiEndpoint,
                 custom_header: async () => {
                 const currentSession = await Auth.currentSession();
                 return {
