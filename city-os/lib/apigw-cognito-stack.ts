@@ -11,36 +11,61 @@ import * as apigwv2Inte from '@aws-cdk/aws-apigatewayv2-integrations-alpha'
 import * as apigwv2Auth from '@aws-cdk/aws-apigatewayv2-authorizers-alpha'
 
 export interface APIGWCognitoStackProps extends StackProps {
-  apiGatewayCongitoVpc: ec2.Vpc,
-  vpcLinkSg: ec2.SecurityGroup
+  apiGatewayCongitoVpc: ec2.Vpc, // VPCのオブジェクトを取得
+  vpcLinkSg: ec2.SecurityGroup // VPCリンクのSecurity Gruopを取得
 }
 
 export class APIGWCognitoStack extends Stack {
   constructor(scope: Construct, id: string, props: APIGWCognitoStackProps) {
     super(scope, id, props);
 
-    // orion-albのパラメータ取得
+    // orion-albのARNを取得
     const orionAlbArn = ssm.StringParameter.valueFromLookup(this, 'orion-alb-id');
 
     // Cognitoユーザープール
-    const pool = new cognito.UserPool(this, "UserPool", {
+    const userPool = new cognito.UserPool(this, "UserPoolCityOS", {
         signInAliases: {
           username: true,
           email: false,
           phone: false
         }
     });
-    const AccessClient = pool.addClient("full-access-client", {
-        authFlows: {
-          adminUserPassword: true,
-          userSrp: true,
+    // Adminアクセススコープ作成
+    const scopeName = '*'
+    const fullAccessScope = new cognito.ResourceServerScope({
+      scopeName: scopeName,
+      scopeDescription: 'Full access',
+    });
+    // リソースサーバー追加(識別子とスコープの設定)
+    const resourceServerId = 'users'
+    userPool.addResourceServer('ResourceServer', {
+      identifier: resourceServerId,
+      scopes: [fullAccessScope],
+    });
+    // ドメイン作成
+    userPool.addDomain('CognitoDomain', {
+      cognitoDomain: {
+        domainPrefix: 'client-credentials-orion',
+      },
+    });
+    // Cognitoアプリケーションクライアント作成
+    const scopeId = `${resourceServerId}/${scopeName}`
+    const AccessClient = userPool.addClient("full-access-client", {
+      authFlows: {
+        adminUserPassword: true,
+        userSrp: true,
+      },
+      generateSecret: true,
+      oAuth: {
+        flows: {
+          clientCredentials: true,
         },
-        generateSecret: false,
-        oAuth: {
-          flows: {
-            authorizationCodeGrant: true
-          }
-        }
+        scopes: [
+          {
+            scopeName: scopeId,
+          },
+        ],
+      }
     });
 
     // VPCリンク作成
@@ -54,10 +79,11 @@ export class APIGWCognitoStack extends Stack {
     // API Gateway (HTTP API)作成
     const httpApi = new apigwv2.HttpApi(this, 'HttpApi');
     // 認証: Cognitoユーザプール
-    const authorizer = new apigwv2Auth.HttpUserPoolAuthorizer('Authorizer', pool);
+    const authorizer = new apigwv2Auth.HttpUserPoolAuthorizer('Authorizer', userPool, {
+      userPoolClients: [AccessClient],
+    });
     // ALBのリスナー取得
     const listener = elbv2.ApplicationListener.fromLookup(this, 'ALBListener', {
-      // loadBalancerArn: 'arn:aws:elasticloadbalancing:us-east-1:128876387380:loadbalancer/app/orion-alb-private/35c822b3d326de1d',
       loadBalancerArn: orionAlbArn,
       listenerProtocol: elbv2.ApplicationProtocol.HTTP,
       listenerPort: 1026,

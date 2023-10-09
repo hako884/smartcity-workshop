@@ -1,18 +1,29 @@
 import requests
 import base64
 import json
+import boto3
 
-CLIENT_ID = "2u23u99dp2kp1q5fnths7r16ol"
-CLIENT_SECRET = "189u3dtt7sdodmsjdj03a88mos5pb3de3v4ca981es8rpl9mh1g9"
-DOMAIN_NAME="client-credentials"
+def get_parameters(param_key):
+    ssm = boto3.client('ssm')
+    response = ssm.get_parameters(
+        Names=[
+            param_key,
+        ],
+        WithDecryption=True
+    )
+    # print(response['Parameters'][0]['Value'])
+    return response['Parameters'][0]['Value']
 
-grant_type = "client_credentials"
-scope = "test_resource/test"
+CLIENT_ID = get_parameters('CLIENT_ID')
+CLIENT_SECRET = get_parameters('CLIENT_SECRET')
+SCOPE = get_parameters('SCOPE')
+COGNITO_ENDPOINT = get_parameters('COGNITO_ENDPOINT')
+API_ENDPOINT = get_parameters('API_ENDPOINT')
 
-# Client Credentials Grant で アクセストークンを取得
-COGNITO_ENDPOINT = f"https://client-credentials.auth.ap-northeast-1.amazoncognito.com/oauth2/token"
 base64_encoded_secret = base64.b64encode(f"{CLIENT_ID}:{CLIENT_SECRET}".encode()).decode()
 # print(base64_encoded_secret)
+
+grant_type = "client_credentials"
 
 headers = {
     "Content-Type": "application/x-www-form-urlencoded",
@@ -21,22 +32,22 @@ headers = {
 
 params = {
     "grant_type": grant_type,
-    "scope": scope
+    "scope": SCOPE
 }
 
 def handler(event, context):
-    r = requests.post(url=COGNITO_ENDPOINT, data=params, headers=headers)
+    # Client Credentials Grant で アクセストークンを取得
+    r = requests.post(url=f"{COGNITO_ENDPOINT}", data=params, headers=headers)
 
     res = r.json()
     access_token = res["access_token"]
     # print(access_token)
 
     # 入手したアクセストークンを利用してAPIを叩く
-    API_ENDPOINT = "https://w63e5x5xlf.execute-api.ap-northeast-1.amazonaws.com"
-    storeId = 'urn:ngsi-ld:Store:001'
-    r = requests.get(url=f"{API_ENDPOINT}/v2/entities/"+storeId+"/", headers={"Authorization": access_token}, params={'options': 'keyValues'})
+    store_id = 'urn:ngsi-ld:Store:001'
+    r = requests.get(url=f"{API_ENDPOINT}/v2/entities/{store_id}/", headers={"Authorization": access_token}, params={'options': 'keyValues'})
 
-    responseBody = { 'message': r.json() }
+    response_body = { 'message': r.json() }
     response = {
         'statusCode': 200,
         'headers': {
@@ -44,9 +55,9 @@ def handler(event, context):
             "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Headers": "Content-Type,Authorization",
         },
-        'body': json.dumps(responseBody),
+        'body': json.dumps(response_body),
     }
-    print(response)
+    # print(response)
     return response
 
 if __name__ == '__main__':

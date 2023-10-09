@@ -1,13 +1,9 @@
 import { Stack, StackProps, Duration, CfnOutput } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-import { aws_lambda as  lambda } from 'aws-cdk-lib';
-import { aws_lambda_nodejs as lambdaNode } from 'aws-cdk-lib';
 import { aws_iam as iam } from 'aws-cdk-lib';
 import { aws_cloudfront as cloudfront } from 'aws-cdk-lib';
 import { aws_s3 as s3 } from 'aws-cdk-lib';
-import { aws_cognito as cognito } from 'aws-cdk-lib';
 import { aws_s3_deployment as s3Deployment } from 'aws-cdk-lib';
-import { aws_apigateway as apigw } from 'aws-cdk-lib';
 import * as path from "path";
 
 export class FrontendStack extends Stack {
@@ -46,50 +42,10 @@ export class FrontendStack extends Stack {
     );
     staticBucket.addToResourcePolicy(cloudfrontS3Access);
 
-    // // Add a Lambda@Edge to add CORS headers to the API.
-    // const apiCorsLambda = new cloudfront.experimental.EdgeFunction(
-    //   this,
-    //   "apiCors",
-    //   {
-    //     code: lambda.Code.fromAsset(path.join(__dirname, "./cloudfront")),
-    //     handler: "cors.onOriginResponse",
-    //     runtime: lambda.Runtime.NODEJS_12_X,
-    //   }
-    // );
-
-    // // Add a Lambda@Edge to rewrite paths and add redirects headers to the static site.
-    // const staticRewriteLambda = new cloudfront.experimental.EdgeFunction(
-    //   this,
-    //   "staticRewrite",
-    //   {
-    //     code: lambda.Code.fromAsset(path.join(__dirname, "./cloudfront")),
-    //     handler: "rewrite.onViewerRequest",
-    //     runtime: lambda.Runtime.NODEJS_12_X,
-    //   }
-    // );
 
     // Create distribution.
     const distribution = new cloudfront.CloudFrontWebDistribution(this, "webDistribution", {
       originConfigs: [
-        // {
-        //   customOriginSource: {
-        //     domainName: `${apiGateway.restApiId}.execute-api.${this.region}.${this.urlSuffix}`,
-        //     originPath: `/${apiGateway.deploymentStage.stageName}`
-        //   },
-        //   behaviors: [
-        //     {
-        //       // lambdaFunctionAssociations: [
-        //       //   {
-        //       //     lambdaFunction: apiCorsLambda,
-        //       //     eventType: cloudfront.LambdaEdgeEventType.ORIGIN_RESPONSE,
-        //       //   },
-        //       // ],
-        //       allowedMethods: cloudfront.CloudFrontAllowedMethods.ALL,
-        //       pathPattern: "api/*",
-        //       maxTtl: Duration.millis(0),
-        //     },
-        //   ],
-        // },
         {
           s3OriginSource: {
             s3BucketSource: staticBucket,
@@ -97,12 +53,6 @@ export class FrontendStack extends Stack {
           },
           behaviors: [
             {
-            //   lambdaFunctionAssociations: [
-            //     {
-            //       lambdaFunction: staticRewriteLambda,
-            //       eventType: cloudfront.LambdaEdgeEventType.VIEWER_REQUEST,
-            //     },
-            //   ],
               isDefaultBehavior: true,
             },
           ],
@@ -111,8 +61,6 @@ export class FrontendStack extends Stack {
     });
 
     // Deploy the static content.
-    // Depending on your process, you might want to deploy the static content yourself
-    // using an s3 sync command instead.
     new s3Deployment.BucketDeployment(this, "staticBucketDeployment", {
       sources: [s3Deployment.Source.asset(path.join(__dirname, "../../app/dist"))],
       destinationKeyPrefix: "/",
