@@ -9,9 +9,3 @@ aws ssm put-parameter --name "CLIENT_SECRET" --type "SecureString" --value $CLIE
 aws ssm put-parameter --name "SCOPE" --type "SecureString" --value $SCOPE
 aws ssm put-parameter --name "COGNITO_ENDPOINT" --type "SecureString" --value $COGNITO_ENDPOINT
 aws ssm put-parameter --name "API_ENDPOINT" --type "SecureString" --value $API_ENDPOINT
-
-# aws ssm get-parameters --name "CLIENT_ID" --with-decryption
-# aws ssm get-parameters --name "CLIENT_SECRET" --with-decryption
-# aws ssm get-parameters --name "SCOPE" --with-decryption
-# aws ssm get-parameters --name "COGNITO_ENDPOINT" --with-decryption
-# aws ssm get-parameters --name "API_ENDPOINT" --with-decryption
