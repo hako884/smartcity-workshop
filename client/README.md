@@ -7,10 +7,10 @@
 
 ## 全体のアーキテクチャ
 
-このプロジェクトで作成するアーキテクチャの全体図です。
-![architecture](images/architecture.png)
+<!-- プロジェクトで作成するアーキテクチャの全体図です。
+![architecture](images/architecture.png) -->
 
-clientプロジェクトではアーキテクチャ全体図のうち以下の図の部分をデプロイします。
+このプロジェクトでは以下のアーキテクチャ図のようにリソースをデプロイします。
 ![client](images/client.png)
 
 ## デプロイ手順
