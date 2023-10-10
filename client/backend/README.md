@@ -22,10 +22,12 @@ AWS_REGION=ap-northeast-1 npx cdk bootstrap
 ```
 
 ### バックエンドリソースのデプロイ
+
 1. バックエンドのリソースをデプロイする前に、 Client Credentials Grant に必要なパラメータを Systems Manager Parameter Store に保存します。
 このパラメータは、 API を呼び出した際に実行されるLambda関数から取得されます。
 
     [`put-parameter.sh`](./put-parameter.sh) を開き、必要な値を入力してください。
+
     ```sh
     CLIENT_ID=XXXXXXXXXXXXXXXXXXXXXXXXXX
     CLIENT_SECRET=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -36,23 +38,30 @@ AWS_REGION=ap-northeast-1 npx cdk bootstrap
     .
     .
     ```
+
     その後、[`put-parameter.sh`](./put-parameter.sh) を実行してください。
-    ```
+
+    ```sh
     ./put-parameter.sh
     ```
 
 1. バックエンドのリソースを新規にデプロイするためには、下記コマンドを実行します。
+
+    ```sh
+    npx cdk deploy BackendStack --require-approval never
     ```
-    npm cdk deploy BackendStack
-    ```
+
     デプロイ完了後に表示されるStack Outputをメモしておいてください。
-    ```
+
+    ```shell
     Outputs:
     BackendStack.CognitoUserPoolId = ap-northeast-1_XXXXXXXXX
     BackendStack.CognitoUserPoolWebClientId = XXXXXXXXXXXXXXXXX
     BackendStack.apiGatewayEndpoint8F3C8843 = https://XXXXXXX.execute-api.ap-northeast-1.amazonaws.com/
     ```
+
 1. Cognitoユーザの作成
+
     - ユーザー名: `demo-user`、パスワード: `cam4PTF.wdg1znw8vnk`のユーザーを作成します。
     - ユーザーの作成をするために、以下のコマンドを実行します。`<user-pool-id>`の箇所は手順1のアウトプットのCognitoのユーザープールIDに置き換えてください。
 
@@ -75,3 +84,4 @@ AWS_REGION=ap-northeast-1 npx cdk bootstrap
         ```
 
 これでバックエンドのデプロイは完了です。
+ここまでできたら[フロントエンドのデプロイ](../frontend/README.md)へ進んでください。

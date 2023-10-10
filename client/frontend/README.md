@@ -46,7 +46,7 @@ npm ci
 
 ```sh
 # Reactのビルド
-cd app
+cd ../app
 npm run build
 
 # 初めてCDKをデプロイするリージョンの場合、CDKを ap-northeast-1 リージョンで使えるように初期化する

@@ -1,10 +1,10 @@
 # FIWARE: Orion and Cygnus on AWS with Amazon API Gateway and Amazon Cognito
 
-This guide will help you to deploy Fiware's Orion and Cygnus components into a serverless architecture.
+このディレクトリは、Fiware Orion と Cygnus コンポーネントをサーバーレスアーキテクチャにデプロイするために利用できます。
 
-## What does this repository include?
+## このリポジトリの概要
 
-1. まず AWS CDK で FIWARE Orion をデプロイするための基本的なリソース（VPCネットワーク、セキュリティグループ、2つのマネージドデータベース）のデプロイを行います。具体的には、以下のスタックを含みます。
+1. AWS CDK で FIWARE Orion をデプロイするための基本的なリソース（VPCネットワーク、セキュリティグループ、2つのマネージドデータベース）のデプロイを行います。具体的には、以下のスタックを含みます。
 
     - Network Stack
       - Amazon VPC · Security Group
@@ -100,13 +100,22 @@ API Gateway · IoT Core など、FIWARE Orion 周辺のリソースをデプロ
 1. 以下のコマンドを実行してデプロイしてください。
 
     ```shell
-    npx cdk deploy IoTStack APIGWCognitoStack
+    npx cdk deploy --require-approval never IoTStack APIGWCognitoStack
     ```
 
-2. [Parameter Store の管理画面](https://ap-northeast-1.console.aws.amazon.com/systems-manager/parameters/?region=ap-northeast-1&tab=Table)へ移動し、IoT デバイスで利用する秘密鍵: `/devices/sample-device-1/certPem` と 証明書: `/devices/sample-device-1/privKey` の値をそれぞれメモしておいてください。[データプロデューサーのデプロイ](../data-producer/README.md)で利用します。
+2. IoT Core のエンドポイントと HTTP API の URL が出力されるため、メモしておきます。[データプロデューサーのデプロイ](../data-producer/README.md)と[クライアントのデプロイ](../client/README.md)で利用します。
 
-3. [Amazon Cognito の管理画面](https://ap-northeast-1.console.aws.amazon.com/cognito/v2/idp/user-pools?region=ap-northeast-1)を開き、`UserPoolCityOS`と名前の入ったユーザープールを開き、Cognito ドメインをメモします。
+    ```shell
+    Outputs:
+    IoTStack.IoTEndpointUrl = xxxxxx-ats.iot.ap-northeast-1.amazonaws.com
+    APIGWCognitoStack.OrionHttpAPIEndpointUrl = https://xxxxxxx.execute-api.ap-northeast-1.amazonaws.com
+    ```
 
-4. 「アプリケーションの統合」タブから、`full-access-client`と名前の入ったアプリケーションクライアントを開きます。`クライアントID` と `クライアントシークレット` をメモします。
+3. [Parameter Store の管理画面](https://ap-northeast-1.console.aws.amazon.com/systems-manager/parameters/?region=ap-northeast-1&tab=Table)へ移動し、IoT デバイスで利用する証明書: `/devices/sample-device-1/certPem` と 秘密鍵: `/devices/sample-device-1/privKey` の値をそれぞれメモしておいてください。[データプロデューサーのデプロイ](../data-producer/README.md)で利用します。\
+※秘密鍵、証明書のコピーは`-----BEGIN XXXXX-----` から`-----END XXXXX-----` までコピーしてください。
+
+4. [Amazon Cognito の管理画面](https://ap-northeast-1.console.aws.amazon.com/cognito/v2/idp/user-pools?region=ap-northeast-1)を開き、`UserPoolCityOS`と名前の入ったユーザープールを開き、Cognito ドメインをメモします。
+
+5. 「アプリケーションの統合」タブから、`full-access-client`と名前の入ったアプリケーションクライアントを開きます。`クライアントID` と `クライアントシークレット` をメモします。
 
 ここまでできたら[データプロデューサーのデプロイ](../data-producer/README.md)へ進んでください。
