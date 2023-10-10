@@ -31,86 +31,94 @@
 
 ### リソースのデプロイ
 
-```shell
-cd ./data-producer
-```
+1. ディレクトリを`./data-producer`へ移動します。
 
-パッケージをインストールします。
+    ```shell
+    cd ./data-producer
+    ```
 
-```shell
-npm ci
-```
+2. パッケージをインストールします。
 
-`DummyIoTStack`をデプロイします。
+    ```shell
+    npm ci
+    ```
 
-```shell
-npx cdk deploy
-```
+3. `DummyIoTStack`をデプロイします。
 
-コマンドが成功すると以下のような出力が表示されるため、リンクをブラウザに貼り付けて Session Manager のページを開きます。
+    ```shell
+    npx cdk deploy --require-approval never
+    ```
 
-```shell
-Outputs:
-DummyIoTStack.DummyIoTInstanceConsole = https://ap-northeast-1.console.aws.amazon.com/ec2/home?region=ap-northeast-1#ConnectToInstance:instanceId=i-xxxxxxxxxx
-```
+4. コマンドが成功すると以下のような出力が表示されるため、リンクをブラウザに貼り付けて Session Manager のページを開きます。
+
+    ```shell
+    Outputs:
+    DummyIoTStack.DummyIoTInstanceConsole = https://ap-northeast-1.console.aws.amazon.com/ec2/home?region=ap-northeast-1#ConnectToInstance:instanceId=i-xxxxxxxxxx
+    ```
 
 ### IoT デバイスの設定
-以下の「接続」のボタンをクリックし、インスタンスへ接続します。
 
-![](./images/session-manager-screen.png)
+1. 以下の「接続」のボタンをクリックし、インスタンスへ接続します。
 
-`ec2-user` へ切り替えます。
+   ![](./images/session-manager-screen.png)
 
-```shell
-sudo su - ec2-user
-```
+2. `ec2-user` へ切り替えます。
 
-[city-os](../city-os/README.md) でデプロイした秘密鍵を書き込みます。`<>`で囲んだ箇所を秘密鍵の内容に置き換えてください。
+    ```shell
+    sudo su - ec2-user
+    ```
 
-```shell
-cat << EOF > /home/ec2-user/environment/dummy_client/certs/sample-private.pem.key
-<city-os でデプロイした秘密鍵の内容記入>
-EOF
-```
+3. [city-os](../city-os/README.md) でデプロイしてメモした秘密鍵を書き込みます。`<>`で囲んだ箇所を秘密鍵の内容に置き換えてください。\
+    テキストエディタ等に以下のコマンドを貼り付け、該当箇所のみ変更した後、再度コピー&ペーストでターミナルに貼り付ける方法がおすすめです。
 
-[city-os](../city-os/README.md) でデプロイした証明書の内容を書き込みます。`<>`で囲んだ箇所を証明書の内容に置き換えてください。
+    ```shell
+    cat << EOF > /home/ec2-user/environment/dummy_client/certs/sample-private.pem.key
+    <city-os でデプロイした秘密鍵の内容記入>
+    EOF
+    ```
 
-```shell
-cat << EOF > /home/ec2-user/environment/dummy_client/certs/sample-certificate.pem.crt
-<city-os でデプロイした証明書の内容記入>
-EOF
-```
+4. [city-os](../city-os/README.md) でデプロイしてメモした証明書の内容を書き込みます。`<>`で囲んだ箇所を証明書の内容に置き換えてください。\
+    テキストエディタ等に以下のコマンドを貼り付け、該当箇所のみ変更した後、再度コピー&ペーストでターミナルに貼り付ける方法がおすすめです。
 
-ダミーデータを送信するプログラムを動作させます。
+    ```shell
+    cat << EOF > /home/ec2-user/environment/dummy_client/certs/sample-certificate.pem.crt
+    <city-os でデプロイした証明書の内容記入>
+    EOF
+    ```
 
-```shell
-cd /home/ec2-user/environment/dummy_client/
-python3 device_main.py --device_name sample-device-1 --endpoint xxxxxxx-ats.iot.ap-northeast-1.amazonaws.com
-```
+5. ダミーデータを送信するプログラムを動作させます。
 
-以下のような出力が表示されたら正常に動作しています。
+    ```shell
+    cd /home/ec2-user/environment/dummy_client/
+    python3 device_main.py --device_name sample-device-1 --endpoint xxxxxxx-ats.iot.ap-northeast-1.amazonaws.com
+    ```
 
-```shell
-evice_name: sample-device-1
-endpoint: xxxxxxxxx-ats.iot.ap-northeast-1.amazonaws.com
-rootca cert: ./certs/AmazonRootCA1.pem
-private key: ./certs/sample-private.pem.key
-certificate: ./certs/sample-certificate.pem.crt
-Check latest Shadow status
-Subscribing to Shadow Delta events...
-Finished getting initial shadow state.
-  Shadow contains reported wait_time: '5'
-un subscribe from get shadow events
-Subscribing to Shadow Update responses...
-topic: data/sample-device-1
-```
+6. 以下のような出力が表示されたら正常に動作しています。
+
+    ```shell
+    evice_name: sample-device-1
+    endpoint: xxxxxxxxx-ats.iot.ap-northeast-1.amazonaws.com
+    rootca cert: ./certs/AmazonRootCA1.pem
+    private key: ./certs/sample-private.pem.key
+    certificate: ./certs/sample-certificate.pem.crt
+    Check latest Shadow status
+    Subscribing to Shadow Delta events...
+    Finished getting initial shadow state.
+      Shadow contains reported wait_time: '5'
+    un subscribe from get shadow events
+    Subscribing to Shadow Update responses...
+    topic: data/sample-device-1
+    ```
 
 ## 動作確認
 
-[AWS IoT Core の MQTT テスト画面](https://ap-northeast-1.console.aws.amazon.com/iot/home?region=ap-northeast-1#/test)へ移動します。
+1. [AWS IoT Core の MQTT テスト画面](https://ap-northeast-1.console.aws.amazon.com/iot/home?region=ap-northeast-1#/test)へ移動します。
 
-「トピックのフィルター」に`data/sample-device-1`と入力し、「サブスクライブ」を押します。
+2. 「トピックのフィルター」に`data/sample-device-1`と入力し、「サブスクライブ」を押します。
 
-以下の画像のように、IoT センサーのデータが表示されたら成功です。
+3. 以下の画像のように、IoT センサーのデータが表示されたら成功です。
 
-![](./images/iot-data-output.png)
+    ![](./images/iot-data-output.png)
+
+
+ここまでできたら[クライアントのデプロイ](../client/README.md)へ進んでください。

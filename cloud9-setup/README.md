@@ -49,3 +49,5 @@ AWS Cloud9 をクリックします。
     ```shell
     sh ./resize.sh
     ```
+
+ここまでできたら[city-osのデプロイ](../city-os/README.md)へ進んでください。
