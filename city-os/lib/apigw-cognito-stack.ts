@@ -45,7 +45,7 @@ export class APIGWCognitoStack extends Stack {
     // ドメイン作成
     userPool.addDomain("CognitoDomain", {
       cognitoDomain: {
-        domainPrefix: "client-credentials-orion",
+        domainPrefix: 'client-credentials-orion-'+Math.random().toString(32).substring(2),
       },
     });
     // Cognitoアプリケーションクライアント作成
