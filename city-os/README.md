@@ -108,14 +108,21 @@ API Gateway · IoT Core など、FIWARE Orion 周辺のリソースをデプロ
     ```shell
     Outputs:
     IoTStack.IoTEndpointUrl = xxxxxx-ats.iot.ap-northeast-1.amazonaws.com
+    IoTStack.EntityInitCommand = aws lambda invoke --function-name xxxxxxxxx --payload '{"command":"init"}' --cli-binary-format raw-in-base64-out res.txt
     APIGWCognitoStack.OrionHttpAPIEndpointUrl = https://xxxxxxx.execute-api.ap-northeast-1.amazonaws.com
     ```
 
-3. [Parameter Store の管理画面](https://ap-northeast-1.console.aws.amazon.com/systems-manager/parameters/?region=ap-northeast-1&tab=Table)へ移動し、IoT デバイスで利用する証明書: `/devices/sample-device-1/certPem` と 秘密鍵: `/devices/sample-device-1/privKey` の値をそれぞれメモしておいてください。[データプロデューサーのデプロイ](../data-producer/README.md)で利用します。\
+3. 上記のOutputsで出力されたEntityInitCommandを実行します。
+
+    ```shell
+    aws lambda invoke --function-name xxxxxxxxx --payload '{"command":"init"}' --cli-binary-format raw-in-base64-out res.txt
+    ```
+
+4. [Parameter Store の管理画面](https://ap-northeast-1.console.aws.amazon.com/systems-manager/parameters/?region=ap-northeast-1&tab=Table)へ移動し、IoT デバイスで利用する証明書: `/devices/sample-device-1/certPem` と 秘密鍵: `/devices/sample-device-1/privKey` の値をそれぞれメモしておいてください。[データプロデューサーのデプロイ](../data-producer/README.md)で利用します。\
 ※秘密鍵、証明書のコピーは`-----BEGIN XXXXX-----` から`-----END XXXXX-----` までコピーしてください。
 
-4. [Amazon Cognito の管理画面](https://ap-northeast-1.console.aws.amazon.com/cognito/v2/idp/user-pools?region=ap-northeast-1)を開き、`UserPoolCityOS`と名前の入ったユーザープールを開き、Cognito ドメインをメモします。
+5. [Amazon Cognito の管理画面](https://ap-northeast-1.console.aws.amazon.com/cognito/v2/idp/user-pools?region=ap-northeast-1)を開き、`UserPoolCityOS`と名前の入ったユーザープールを開き、Cognito ドメインをメモします。
 
-5. 「アプリケーションの統合」タブから、`full-access-client`と名前の入ったアプリケーションクライアントを開きます。`クライアントID` と `クライアントシークレット` をメモします。
+6. 「アプリケーションの統合」タブから、`full-access-client`と名前の入ったアプリケーションクライアントを開きます。`クライアントID` と `クライアントシークレット` をメモします。
 
 ここまでできたら[データプロデューサーのデプロイ](../data-producer/README.md)へ進んでください。

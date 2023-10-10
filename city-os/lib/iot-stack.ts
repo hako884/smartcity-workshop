@@ -105,6 +105,19 @@ export class IoTStack extends Stack {
       },
     });
 
+    const setInitialDataFunction = new PythonFunction(this, "SetInitialDataHandler", {
+      vpc: props.vpc,
+      securityGroups: [props.iotLambdaSg],
+      runtime: Runtime.PYTHON_3_10,
+      entry: "lambda/set-initial-data",
+      index: "index.py",
+      memorySize: 256,
+      timeout: Duration.seconds(10),
+      environment: {
+        NGSI_ENDPOINT: orionAlb.loadBalancerDnsName,
+      },
+    });
+
     topicRule.addAction(new iot_actions_alpha.LambdaFunctionAction(putDeviceDataFunction));
 
     const getIoTEndpoint = new custom_resources.AwsCustomResource(this, "IoTEndpoint", {
@@ -131,6 +144,10 @@ export class IoTStack extends Stack {
 
     new CfnOutput(this, "IoTEndpointUrl", {
       value: iotEndpoint,
+    });
+
+    new CfnOutput(this, "EntityInitCommand", {
+      value: `aws lambda invoke --function-name ${setInitialDataFunction.functionName} --payload '{"command":"init"}' --cli-binary-format raw-in-base64-out res.txt`
     });
   }
 }
