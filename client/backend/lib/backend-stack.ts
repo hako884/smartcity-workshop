@@ -48,6 +48,9 @@ export class BackendStack extends Stack {
         roleName: 'orion-lambda-execution-role',
         assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
         inlinePolicies: {'myParameterStorePolicy': myParameterStorePolicy},
+        managedPolicies: [
+          iam.ManagedPolicy.fromAwsManagedPolicyName('service-role/AWSLambdaBasicExecutionRole'),
+        ],
       }
     );
 

@@ -45,7 +45,7 @@ def handler(event, context):
 
     # 入手したアクセストークンを利用してAPIを叩く
     store_id = 'urn:ngsi-ld:Store:001'
-    r = requests.get(url=f"{API_ENDPOINT}/v2/entities/{store_id}/", headers={"Authorization": access_token}, params={'options': 'keyValues'})
+    r = requests.get(url=f"{API_ENDPOINT}v2/entities/{store_id}/", headers={"Authorization": access_token}, params={'options': 'keyValues'})
 
     response_body = { 'message': r.json() }
     response = {

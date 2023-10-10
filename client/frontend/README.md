@@ -55,7 +55,7 @@ AWS_REGION=ap-northeast-1 npx cdk bootstrap
 
 # S3へのアップロードおよびCloudFrontのキャッシュInvalidate
 cd ../cdk
-npx cdk deploy
+npx cdk deploy FrontendStack --require-approval never
 ```
 
 一連の操作は通常8分程度で完了します。完了したら、次の手順に進んでください。

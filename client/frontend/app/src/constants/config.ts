@@ -10,6 +10,6 @@ export default {
   
     // バックエンドAPIのエンドポイント
     apiEndpoint:
-      'https://XXXXXXXXXXXXXXXXXX.execute-api.ap-northeast-1.amazonaws.com/api/',
+      'https://XXXXXXXXXXXXXXXXXX.execute-api.ap-northeast-1.amazonaws.com/prod/',
 };
   
