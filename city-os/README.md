@@ -26,21 +26,22 @@
 
 - まず、このアーキテクチャーは AWS CDK で以下のリソースがデプロイされます。
 
-![CDK Architecture](image/cdk-arch1.png)
+    ![CDK Architecture](image/cdk-arch1.png)
 
 - 次に、Docker Compose CLI で ECS · ALB などのリソースをデプロイします。
 
-![Docker Compose Architecture](image/ecs-arch1.png)
+    ![Docker Compose Architecture](image/ecs-arch1.png)
 
 - 次に、API Gateway · IoT Core など、FIWARE Orion 周辺のリソースをデプロイします。
 
-![Docker Compose Architecture](image/cdk-arch2.png)
+    ![Docker Compose Architecture](image/cdk-arch2.png)
 
 ## デプロイ方法
 
 ### 1. Infrastructure
 
 [AWS profile](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-profiles.html)を設定してください。
+Cloud9 を利用している場合は `default` profile でも代用が可能です。
 
 ### 3. Deployer script
 
@@ -70,15 +71,16 @@
 #### 4.1 前提条件
 
 1. [docker](https://docs.docker.com/cloud/ecs-integration/)のインストール
-2. FIWARE orion 環境用の docker コンテキストを作成または選択します。
+2. FIWARE orion 環境用の docker コンテキストを作成または選択します。\
+   profileを利用する代わりに、環境変数を利用することもできます。
 
-```bash
-$ docker context create ecs <context-name>
-? Create a Docker context using: [Use arrows to move, type to filter]
-  > An existing AWS profile  <- Note: Select this to use the AWS profile you created.
+    ```bash
+    $ docker context create ecs <context-name>
+    ? Create a Docker context using: [Use arrows to move, type to filter]
+      > An existing AWS profile  <- Note: Select this to use the AWS profile you created.
 
-$ docker context use <context-name>
-```
+    $ docker context use <context-name>
+    ```
 
 #### 4.2 Docker ECS integration を利用して FIWARE Orion and Cygnus をデプロイする
 
@@ -95,34 +97,38 @@ $ docker context use <context-name>
 
 API Gateway · IoT Core など、FIWARE Orion 周辺のリソースをデプロイします。
 
-0. `docker context use default`を実行します。
+1. `docker context use default`を実行します。
 
-1. 以下のコマンドを実行してデプロイしてください。
+2. 以下のコマンドを実行してデプロイしてください。
 
     ```shell
     npx cdk deploy --require-approval never IoTStack APIGWCognitoStack
     ```
 
-2. IoT Core のエンドポイントと HTTP API の URL が出力されるため、メモしておきます。[データプロデューサーのデプロイ](../data-producer/README.md)と[クライアントのデプロイ](../client/README.md)で利用します。
+3. HTTP API の URL と IoT Core のエンドポイント, EntityInitCommand がそれぞれ出力されるため、メモしておきます。[データプロデューサーのデプロイ](../data-producer/README.md)と[クライアントのデプロイ](../client/README.md)で利用します。
+
+    ```shell
+    Outputs:
+    APIGWCognitoStack.OrionHttpAPIEndpointUrl = https://xxxxxxx.execute-api.ap-northeast-1.amazonaws.com
+    ```
 
     ```shell
     Outputs:
     IoTStack.IoTEndpointUrl = xxxxxx-ats.iot.ap-northeast-1.amazonaws.com
     IoTStack.EntityInitCommand = aws lambda invoke --function-name xxxxxxxxx --payload '{"command":"init"}' --cli-binary-format raw-in-base64-out res.txt
-    APIGWCognitoStack.OrionHttpAPIEndpointUrl = https://xxxxxxx.execute-api.ap-northeast-1.amazonaws.com
     ```
 
-3. 上記のOutputsで出力されたEntityInitCommandを実行します。
+4. 上記のOutputsで出力された EntityInitCommand を実行します。
 
     ```shell
     aws lambda invoke --function-name xxxxxxxxx --payload '{"command":"init"}' --cli-binary-format raw-in-base64-out res.txt
     ```
 
-4. [Parameter Store の管理画面](https://ap-northeast-1.console.aws.amazon.com/systems-manager/parameters/?region=ap-northeast-1&tab=Table)へ移動し、IoT デバイスで利用する証明書: `/devices/sample-device-1/certPem` と 秘密鍵: `/devices/sample-device-1/privKey` の値をそれぞれメモしておいてください。[データプロデューサーのデプロイ](../data-producer/README.md)で利用します。\
+5. [Parameter Store の管理画面](https://ap-northeast-1.console.aws.amazon.com/systems-manager/parameters/?region=ap-northeast-1&tab=Table)へ移動し、IoT デバイスで利用する証明書: `/devices/sample-device-1/certPem` と 秘密鍵: `/devices/sample-device-1/privKey` の値をそれぞれメモしておいてください。[データプロデューサーのデプロイ](../data-producer/README.md)で利用します。\
 ※秘密鍵、証明書のコピーは`-----BEGIN XXXXX-----` から`-----END XXXXX-----` までコピーしてください。
 
-5. [Amazon Cognito の管理画面](https://ap-northeast-1.console.aws.amazon.com/cognito/v2/idp/user-pools?region=ap-northeast-1)を開き、`UserPoolCityOS`と名前の入ったユーザープールを開き、Cognito ドメインをメモします。
+6. [Amazon Cognito の管理画面](https://ap-northeast-1.console.aws.amazon.com/cognito/v2/idp/user-pools?region=ap-northeast-1)を開き、`UserPoolCityOS`と名前の入ったユーザープールを開き、`アプリケーションの統合`タブを開いて Cognito ドメインをメモします。
 
-6. 「アプリケーションの統合」タブから、`full-access-client`と名前の入ったアプリケーションクライアントを開きます。`クライアントID` と `クライアントシークレット` をメモします。
+7. 「アプリケーションの統合」タブから、`full-access-client`と名前の入ったアプリケーションクライアントを開きます。`クライアントID` と `クライアントシークレット` をメモします。
 
 ここまでできたら[データプロデューサーのデプロイ](../data-producer/README.md)へ進んでください。

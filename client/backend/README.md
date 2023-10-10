@@ -53,7 +53,7 @@ AWS_REGION=ap-northeast-1 npx cdk bootstrap
 
         ![Cognito Application Client ID and Secrets](../images/cognito-client-id-secrets.png)
     
-    - `API_ENDPOINT` は、FIWARE orionの周辺リソースをデプロイした際に出力された、 `APIGWCognitoStack.OrionHttpAPIEndpointUrl` の値を入力してください。
+    - `API_ENDPOINT` は、 FIWARE orion の周辺リソースをデプロイした際に出力された、 `APIGWCognitoStack.OrionHttpAPIEndpointUrl` の値を入力してください。
 
     その後、[`put-parameter.sh`](./put-parameter.sh) を実行してください。
 
@@ -79,7 +79,7 @@ AWS_REGION=ap-northeast-1 npx cdk bootstrap
 1. Cognitoユーザの作成
 
     - ユーザー名: `demo-user`、パスワード: `cam4PTF.wdg1znw8vnk`のユーザーを作成します。
-    - ユーザーの作成をするために、以下のコマンドを実行します。`<user-pool-id>`の箇所は手順1のアウトプットのCognitoのユーザープールIDに置き換えてください。
+    - ユーザーの作成をするために、以下のコマンドを実行します。`<user-pool-id>`の箇所は手順2のアウトプットのCognitoのユーザープールIDに置き換えてください。
 
         ```shell
         aws cognito-idp admin-create-user \

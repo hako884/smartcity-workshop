@@ -15,7 +15,7 @@ AWS Cloud9 をクリックします。
 
     ![](./image/02_cloud9_create_environment.png)
 
-3. 次に、以下の [Name] に `typescript_cdk_workshop` と入力します。
+3. 次に、以下の [Name] に `smartcity_workshop` と入力します。
 
     ![](./image/03_name_environment.png)
 
@@ -47,7 +47,7 @@ AWS Cloud9 をクリックします。
 3. Cloud9 のボリュームを 50 GiB に増やします。
 
     ```shell
-    sh ./resize.sh
+    sh ./resize.sh 50
     ```
 
 ここまでできたら[city-osのデプロイ](../city-os/README.md)へ進んでください。

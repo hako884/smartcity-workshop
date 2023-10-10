@@ -3,6 +3,7 @@
 ## webアプリのデモの様子
 
 このプロジェクトで作成するwebアプリの動作イメージです。
+
 ![demo](images/client_app_demo.gif)
 
 ## 全体のアーキテクチャ

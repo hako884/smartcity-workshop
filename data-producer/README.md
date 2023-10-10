@@ -86,11 +86,11 @@
     EOF
     ```
 
-5. ダミーデータを送信するプログラムを動作させます。
+5. ダミーデータを送信するプログラムを動作させます。<IoT Endpoint のURL> を[City OSのデプロイ](../city-os/README.md)でメモした内容に置き換えてください。
 
     ```shell
     cd /home/ec2-user/environment/dummy_client/
-    python3 device_main.py --device_name sample-device-1 --endpoint xxxxxxx-ats.iot.ap-northeast-1.amazonaws.com
+    python3 device_main.py --device_name sample-device-1 --endpoint <IoT Endpoint のURL>
     ```
 
 6. 以下のような出力が表示されたら正常に動作しています。
