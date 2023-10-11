@@ -40,7 +40,7 @@ AWS_REGION=ap-northeast-1 npx cdk bootstrap
     .
     ```
 
-    [Cognitoマネジメントコンソール](https://console.aws.amazon.com/cognito/home)を開き、名前にUserPoolCityOSとあるCognitoユーザプールを選択し、アプリケーションの統合をクリックしてください。
+    [Cognitoマネジメントコンソール](https://console.aws.amazon.com/cognito/home)を開き、名前に UserPoolCityOS とあるCognitoユーザプールを選択し、アプリケーションの統合をクリックしてください。これは先ほど [City OS のデプロイ](../../city-os/README.md)でデプロイした Cognito ユーザプールです。
 
     ![Cognito Application Client Overview](../images/cognito-app-client-overview.png)
 
@@ -79,7 +79,7 @@ AWS_REGION=ap-northeast-1 npx cdk bootstrap
 1. Cognitoユーザの作成
 
     - ユーザー名: `demo-user`、パスワード: `cam4PTF.wdg1znw8vnk`のユーザーを作成します。
-    - ユーザーの作成をするために、以下のコマンドを実行します。`<user-pool-id>`の箇所は手順2のアウトプットのCognitoのユーザープールIDに置き換えてください。
+    - ユーザーの作成をするために、以下のコマンドを実行します。`<user-pool-id>`の箇所は手順2のアウトプットのCognitoのユーザープールIDに置き換えてください。**[City OSのデプロイ](../../city-os/README.md)でデプロイした Cognito ユーザプールではないため注意してください。**
 
         ```shell
         aws cognito-idp admin-create-user \
