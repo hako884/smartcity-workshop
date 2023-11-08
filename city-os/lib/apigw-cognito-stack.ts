@@ -38,7 +38,7 @@ export class APIGWCognitoStack extends Stack {
     });
     // リソースサーバー追加(識別子とスコープの設定)
     const resourceServerId = "users";
-    userPool.addResourceServer("ResourceServer", {
+    const resourceServer = userPool.addResourceServer("ResourceServer", {
       identifier: resourceServerId,
       scopes: [fullAccessScope],
     });
@@ -49,7 +49,6 @@ export class APIGWCognitoStack extends Stack {
       },
     });
     // Cognitoアプリケーションクライアント作成
-    const scopeId = `${resourceServerId}/${scopeName}`;
     const AccessClient = userPool.addClient("full-access-client", {
       authFlows: {
         adminUserPassword: true,
@@ -61,9 +60,7 @@ export class APIGWCognitoStack extends Stack {
           clientCredentials: true,
         },
         scopes: [
-          {
-            scopeName: scopeId,
-          },
+          cognito.OAuthScope.resourceServer(resourceServer, fullAccessScope)
         ],
       },
     });
