@@ -59,7 +59,7 @@
     python3 get.py urn:ngsi-ld:Store:001
     ```
 1. 店舗の名前、温度、湿度のデータが取得できていれば成功です。間隔を空けて実行すると、更新されたデータを取得していることが分かります。
-    ```json
+    ```sh
     $ python3 get.py urn:ngsi-ld:Store:001
      store name: Bösebrücke Einkauf
        humidity: 40
