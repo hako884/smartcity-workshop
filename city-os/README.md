@@ -123,6 +123,46 @@ API Gateway · IoT Core など、FIWARE Orion 周辺のリソースをデプロ
     ```shell
     aws lambda invoke --function-name xxxxxxxxx --payload '{"command":"init"}' --cli-binary-format raw-in-base64-out res.txt
     ```
+    以下のデータがテストデータとして挿入されます。データの内容は、店舗の名前や温度、湿度のデータになります。
+    ```json
+    {
+        "id": "urn:ngsi-ld:Store:001",
+        "type": "Store",
+        "address": {
+            "type": "PostalAddress",
+            "value": {
+                "streetAddress": "Bornholmer Straße 65",
+                "addressRegion": "Berlin",
+                "addressLocality": "Prenzlauer Berg",
+                "postalCode": "10439"
+            },
+            "metadata": {
+                "verified": {
+                    "value": True,
+                    "type": "Boolean"
+                }
+            }
+        },
+        "location": {
+            "type": "geo:json",
+            "value": {
+                "type": "Point",
+                "coordinates": [13.3986, 52.5547]
+            }
+        },
+        "name": {
+            "type": "Text",
+            "value": "Bösebrücke Einkauf"
+        },
+        "conditions": {
+            "type": "Condition", "value": {
+                "humidity": 42,
+                "temperature": 25,
+                "timestamp": "2023-10-03T06:02:42"
+            }
+        },
+    }
+    ```
 
 5. [Parameter Store の管理画面](https://ap-northeast-1.console.aws.amazon.com/systems-manager/parameters/?region=ap-northeast-1&tab=Table)へ移動し、IoT デバイスで利用する証明書: `/devices/sample-device-1/certPem` と 秘密鍵: `/devices/sample-device-1/privKey` の値をそれぞれメモしておいてください。[データプロデューサーのデプロイ](../data-producer/README.md)で利用します。\
 ※秘密鍵、証明書のコピーは`-----BEGIN XXXXX-----` から`-----END XXXXX-----` までコピーしてください。

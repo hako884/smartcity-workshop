@@ -1,6 +1,5 @@
 import requests
 import base64
-import json
 import boto3
 import sys
 
@@ -41,21 +40,14 @@ params = {
 
 r = requests.post(url=f"{COGNITO_ENDPOINT}", data=params, headers=headers)
 
-res = r.json()
-access_token = res["access_token"]
+res_auth = r.json()
+access_token = res_auth["access_token"]
 
 store_id = args[1]
-# store_id = 'urn:ngsi-ld:Store:001'
 r = requests.get(url=f"{API_ENDPOINT}v2/entities/{store_id}/", headers={"Authorization": access_token}, params={'options': 'keyValues'})
 
-response_body = { 'message': r.json() }
-response = {
-    'statusCode': 200,
-    'headers': {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Headers": "Content-Type,Authorization",
-    },
-    'body': json.dumps(response_body),
-}
-print(response)
+res_req = r.json()
+
+print(' store name: ' + str(res_req['name']))
+print('   humidity: ' + str(res_req['conditions']['humidity']))
+print('temperature: ' + str(res_req['conditions']['temperature']))

@@ -24,26 +24,26 @@
     CUSTOM_SCOPE=XXXX # カスタムスコープ
     SCOPE=$RESOUCE_SERVER_ID/$CUSTOM_SCOPE
     COGNITO_ENDPOINT=https://XXXXXXXXXXXX.auth.ap-northeast-1.amazoncognito.com/oauth2/token # Cognito認証ドメイン
-    API_ENDPOINT=https://XXXXXXXX.execute-api.ap-northeast-1.amazonaws.com/ # HTTP API のエンドポイント
+    API_ENDPOINT=https://XXXXXXXX.XXXXXXX.XXXXXXXXXX.XXXXXXXXX.XXX/ # HTTP API のエンドポイント
     .
     .
     .
     ```
 
-    [Cognitoマネジメントコンソール](https://console.aws.amazon.com/cognito/home)を開き、名前に UserPoolCityOS とあるCognitoユーザプールを選択し、アプリケーションの統合をクリックしてください。これは先ほど [City OS のデプロイ](../city-os/README.md)でデプロイした Cognito ユーザプールです。
+    [Cognitoマネジメントコンソール](https://console.aws.amazon.com/cognito/home)を開き、名前に UserPoolCityOS とある Cognito ユーザプールを選択し、アプリケーションの統合をクリックしてください。これは先ほど [City OS のデプロイ](../city-os/README.md)でデプロイした Cognito ユーザプールです。
 
     ![Cognito Application Client Overview](./images/cognito-app-client-overview.png)
 
     次に、以下に注意して [`put-parameter.sh`](./put-parameter.sh) に必要な値を入力してください。
 
-    - `RESOUCE_SERVER_ID`と`CUSTOM_SCOPE`は以下の赤枠の値をそのまま入力、`COGNITO_ENDPOINT` は、Cognitoドメインのうち一意の識別子の部分をXXXXX部に入力してください。
+    - `RESOUCE_SERVER_ID`と`CUSTOM_SCOPE`は以下の赤枠の値をそのまま入力、`COGNITO_ENDPOINT` は、Cognitoドメインの一意の識別子の部分をXXXXX部に入力してください。
         ![Cognito Application Client](./images/cognito-app-client.png)
 
-    - `CLIENT_ID`と`CLIENT_SECRET`は、アプリケーションクライアント名のリンクをクリックして閲覧することができます。
+    - `CLIENT_ID`と`CLIENT_SECRET`は、各項目の横のアイコンをクリックしてコピーすることが可能です。
 
         ![Cognito Application Client ID and Secrets](./images/cognito-client-id-secrets.png)
     
-    - `API_ENDPOINT` は、 FIWARE orion の周辺リソースをデプロイした際に出力された、 `APIGWCognitoStack.OrionHttpAPIEndpointUrl` の値を入力してください。
+    - `API_ENDPOINT` は、 FIWARE orion の周辺リソースをデプロイした際に出力された、 `APIGWCognitoStack.OrionHttpAPIEndpointUrl` の値を入力してください（最後の"/"まで含めてください）。
 
     その後、[`put-parameter.sh`](./put-parameter.sh) を実行してください。
 
@@ -54,11 +54,18 @@
     ```sh
     pip3 install requests==2.31.0
     ```
-1. Pythonプログラムを実行します。以下は実行例になります。
+1. Pythonプログラムを実行します。
     ```sh
     python3 get.py urn:ngsi-ld:Store:001
     ```
-1. 以下のような出力が得られると成功です。
+1. 店舗の名前、温度、湿度のデータが取得できていれば成功です。間隔を空けて実行すると、更新されたデータを取得していることが分かります。
     ```json
-    {'statusCode': 200, 'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'Content-Type,Authorization'}, 'body': '{"message": {"id": "urn:ngsi-ld:Store:001", "type": "Store", "address": {"streetAddress": "Bornholmer Stra\\u00dfe 65", "addressRegion": "Berlin", "addressLocality": "Prenzlauer Berg", "postalCode": "10439"}, "conditions": {"humidity": "46", "temperature": "24.4", "timestamp": "2023-10-07T21:13:29"}, "location": {"type": "Point", "coordinates": [13.3986, 52.5547]}, "name": "B\\u00f6sebr\\u00fccke Einkauf"}}'}
+    $ python3 get.py urn:ngsi-ld:Store:001
+     store name: Bösebrücke Einkauf
+       humidity: 40
+    temperature: 17
+    $ python3 get.py urn:ngsi-ld:Store:001
+     store name: Bösebrücke Einkauf
+       humidity: 54
+    temperature: 24
     ```
