@@ -6,6 +6,16 @@
 1. 都市OS側から受け取った認証情報を元に Client Credentials Flow を通して認証を行い、アクセストークンを取得します。
 1. アクセストークンを含めてOrionに対してリクエストを実行し、データを取得します。
 
+## ディレクトリ構成
+
+```shell
+.
+├── README.md               # 本READMEファイル
+├── images                  # READMEの画像配置ディレクトリ
+├── get.py                  # データ取得プログラム
+├── put_parameter.sh        # パラメータ登録スクリプト
+```
+
 ## 実行手順
 現在の作業ディレクトリが`smart-city-sample`直下であることを想定しています。
 
@@ -59,7 +69,7 @@
     python3 get.py urn:ngsi-ld:Store:001
     ```
 1. 店舗の名前、温度、湿度のデータが取得できていれば成功です。間隔を空けて実行すると、更新されたデータを取得していることが分かります。
-    ```json
+    ```sh
     $ python3 get.py urn:ngsi-ld:Store:001
      store name: Bösebrücke Einkauf
        humidity: 40
