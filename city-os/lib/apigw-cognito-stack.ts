@@ -49,7 +49,6 @@ export class APIGWCognitoStack extends Stack {
       },
     });
     // Cognitoアプリケーションクライアント作成
-    // const scopeId = `${resourceServerId}/${scopeName}`;
     const AccessClient = userPool.addClient("full-access-client", {
       authFlows: {
         adminUserPassword: true,
@@ -62,9 +61,6 @@ export class APIGWCognitoStack extends Stack {
         },
         scopes: [
           cognito.OAuthScope.resourceServer(resourceServer, fullAccessScope)
-          // {
-          //   scopeName: scopeId,
-          // },
         ],
       },
     });
