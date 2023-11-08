@@ -24,9 +24,9 @@
     cd ./client
     ```
 1. Pythonプログラムを実行する前に、 Client Credentials Grant に必要なパラメータを Systems Manager Parameter Store に保存します。
-このパラメータは、 API を呼び出した際に実行されるLambda関数から取得されます。
+このパラメータは、Pythonプログラム内で取得されます。
 
-    [`put-parameter.sh`](./put-parameter.sh) を開き、必要な値を入力してください。
+    この手順では、[`put-parameter.sh`](./put-parameter.sh) を開き、必要な値を入力していきます。
     ```sh
     CLIENT_ID=XXXXXXXXXXXXXXXXXXXXXXXXXX # クライアントID
     CLIENT_SECRET=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX # クライアントシークレット
@@ -40,34 +40,38 @@
     .
     ```
 
-    [Cognitoマネジメントコンソール](https://console.aws.amazon.com/cognito/home)を開き、名前に UserPoolCityOS とある Cognito ユーザプールを選択し、アプリケーションの統合をクリックしてください。これは先ほど [City OS のデプロイ](../city-os/README.md)でデプロイした Cognito ユーザプールです。
+    まず、[Cognitoマネジメントコンソール](https://console.aws.amazon.com/cognito/home)を開き、名前に`UserPoolCityOS`とある Cognito ユーザプールを選択し、アプリケーションの統合をクリックしてください。これは先ほど [City OS のデプロイ](../city-os/README.md)でデプロイした Cognito ユーザプールです。
 
     ![Cognito Application Client Overview](./images/cognito-app-client-overview.png)
 
-    次に、以下に注意して [`put-parameter.sh`](./put-parameter.sh) に必要な値を入力してください。
+    次に、以下の手順で [`put-parameter.sh`](./put-parameter.sh) に必要な値を入力してください。
 
-    - `RESOUCE_SERVER_ID`と`CUSTOM_SCOPE`は以下の赤枠の値をそのまま入力、`COGNITO_ENDPOINT` は、Cognitoドメインの一意の識別子の部分をXXXXX部に入力してください。
+    1. `RESOUCE_SERVER_ID`と`CUSTOM_SCOPE`は以下の赤枠の値をそのまま入力、`COGNITO_ENDPOINT` は、Cognitoドメインの一意の識別子の部分をXXXXX部に入力してください。
         ![Cognito Application Client](./images/cognito-app-client.png)
+    
+    1. アプリケーションクライアントのリストから、名前に`UserPoolCityOSfullaccessclient`がついたアプリケーションクライアントのリンクをクリックします。
 
-    - `CLIENT_ID`と`CLIENT_SECRET`は、各項目の横のアイコンをクリックしてコピーすることが可能です。
+    1. `CLIENT_ID`と`CLIENT_SECRET`は、各項目の横のアイコンをクリックしてコピーし、それぞれ入力を行ってください。
 
         ![Cognito Application Client ID and Secrets](./images/cognito-client-id-secrets.png)
     
-    - `API_ENDPOINT` は、 FIWARE orion の周辺リソースをデプロイした際に出力された、 `APIGWCognitoStack.OrionHttpAPIEndpointUrl` の値を入力してください（最後の"/"まで含めてください）。
+    1. `API_ENDPOINT` は、 FIWARE orion の周辺リソースをデプロイした際に出力された、 `APIGWCognitoStack.OrionHttpAPIEndpointUrl` の値を入力してください（最後の"/"まで含めてください）。
 
-    その後、[`put-parameter.sh`](./put-parameter.sh) を実行してください。
-
+    その後、[`put-parameter.sh`](./put-parameter.sh) を実行し、パラメータを保存してください。
     ```sh
     sh put-parameter.sh
     ```
+
 1. Pythonプログラムの実行に必要なパッケージをインストールします。
     ```sh
     pip3 install requests==2.31.0
     ```
+
 1. Pythonプログラムを実行します。
     ```sh
     python3 get.py urn:ngsi-ld:Store:001
     ```
+
 1. 店舗の名前、温度、湿度のデータが取得できていれば成功です。間隔を空けて実行すると、更新されたデータを取得していることが分かります。
     ```sh
     $ python3 get.py urn:ngsi-ld:Store:001
